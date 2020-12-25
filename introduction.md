@@ -32,7 +32,7 @@ Some of openHAB's strengths are:
 - To provide a uniform user interface and a common approach to automation rules across the entire system, regardless of the number of manufacturers and sub-systems involved
 - Giving you the most flexible tool available to make almost any home automation wish come true; if you can think it, odds are that you can implement it with openHAB.
 
-## What you need to know before you start
+## What You Need to Know Before You Start
 
 **When home automation just seems to work, it is always the result of hard work.** 
 Home automation is fascinating and requires a considerable investment of your time. 
@@ -68,7 +68,7 @@ Basic functions can be achieved in openHAB rather quickly, e.g., switch lights o
 Others will require much more efforts and thoughts, e.g., how do I determine that someone is home, including guests, but not counting pets? 
 The openHAB forum is a great place to learn and discuss. 
 
-## A quick overview
+## A Quick Overview
 
 openHAB communicates electronically with smart and not-so-smart devices, performs user-defined actions and provides web-pages with user-defined information as well as user-defined tools to interact with all devices. 
 To achieve this, openHAB segments and compartmentalizes certain functions and operations. 
@@ -109,7 +109,7 @@ New bindings are regularly added as developers integrate more devices into openH
 For each binding, detailed instructions and examples are provided that include guidance on configuration (if any) of the binding itself, the definition of [Things]({{base}}/concepts/things.html) supported by this binding and the Channels these [Things]({{base}}/concepts/things) provide. 
 In most cases, the description also contains a fully worked out example that includes a definition of [Things]({{base}}/concepts/things) and its Channels, [Items]({{base}}/concepts/items.html) linked to those Channels and the use of these [Items]({{base}}/concepts/items.html) in a sitemap.
 
-## While you are getting started
+## While You Are Getting Started
 
 To all newcomers: please read the section [New User Tutorial]({{base}}/tutorial). 
 That section provides you with step-by-step instructions for your first easy setup. 
@@ -121,11 +121,13 @@ If you have a strong preference towards a particular platform, then that platfor
 You can install openHAB on your desktop computer for evaluation purposes if you already have any of these systems available for use, but we recommend using a dedicated system in the long run. 
 If you feel serious about home automation it may be better to start with a dedicated system right away.
 
-For anyone undecided: many people find that the simplest way to experiment with openHAB is to get a [Raspberry Pi (Version 3 for the best experience)](https://raspberrypi.org) and install [openHABian]({{base}}/installation/openhabian.html); a "hassle-free openHAB setup". 
+For anyone undecided: many people find that the simplest way to experiment with openHAB is to get a [Raspberry Pi (Version 4 with 2 or 4 GB for the best experience, but a RPi 2 or 3 is fine, too)](https://raspberrypi.org) and install [openHABian]({{base}}/installation/openhabian.html); a "hassle-free openHAB setup". 
 While openHABian offers a streamlined and simplified way to get up and running quickly, it is a complete openHAB home automation system easily capable of automating your entire home.
-However, it is worth noting two potential limitations of Raspberry Pis. 
-They are limited in RAM (memory) and may not perform well when additional database and data visualization programs are installed.
-Running Raspberries from SD-cards only may result in system instabilities as these memory cards can degrade quickly under openHAB's use conditions. 
+However, it is worth noting two potential limitations of Raspberry Pis:
+RPi 3 and older are limited in RAM (1 GB of memory or less) and may not perform well when additional memory hungry applications such as databases and data visualization programs are installed.
+Two or more GB should be fine.
+Running Raspberries off the internal SD card only may result in system instabilities as these memory cards can degrade quickly under openHAB's use conditions.
+If you choose to deploy openHABian, there's the ZRAM feature available to mitigate.
 
 Once you have openHAB up and running, the [Configuration]({{base}}/configuration/index.html) article contains everything you need to know to get your openHAB installation talking to different devices around your home. 
 
@@ -141,7 +143,8 @@ Along the way, you may have some questions; the openHAB community is here to hel
 
 openHAB is not just software - it is also a **community** of users, contributors and maintainers, working together on an open-source, interoperable approach to home automation. 
 The center of this community is the [openHAB community forum](https://community.openhab.org). 
-It is an active and responsive community of developers and maintainers who generally respond quite quickly to forum questions. 
+It is an active and responsive community of experienced users who generally respond quite quickly to forum questions.
+[Mind the rules](https://community.openhab.org/t/how-to-ask-a-good-question-help-us-help-you/58396), please.
 
 Remember that openHAB is an open-source development, driven exclusively by volunteers. 
 Please be kind and courteous, it will be most appreciated by those that will try to help you.
@@ -178,9 +181,9 @@ And quite often, the investment will be significant.
 Don’t give up, openHAB is very powerful and flexible and most likely can help you achieve your home automation goals, whichever they are. 
 But it comes with a rather steep learning curve.
 
-## A deeper dive: openHAB Structure for advanced users
+## A Deeper Dive: openHAB Structure for Advanced Users
 
-openHAB 2 is developed in [Java](https:/www.java.com/) and uses [OSGi](https://www.osgi.org/) for modularity. 
+openHAB 2 is developed in [Java](https://www.java.com/) and uses [OSGi](https://www.osgi.org/) for modularity. 
 [Apache Karaf](http://karaf.apache.org/) serves as a container with [Eclipse Equinox](https://www.eclipse.org/equinox/) as the OSGi runtime environment. 
 [Jetty](https://www.eclipse.org/jetty/) is included as an HTTP server.
 

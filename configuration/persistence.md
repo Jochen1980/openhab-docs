@@ -89,6 +89,7 @@ where `<itemlist>` is a comma-separated list consisting of one or more of the fo
 - `*` - this line should apply to all items in the system
 - `<itemName>` a single Item identified by its name. This Item can be a group Item.  But note that only the group value will be persisted.  The value of the individual group members will not be persisted using this option.
 - `<groupName>*` - all members of this group will be persisted, but not the group itself. If no strategies are provided, the default strategies that are declared in the first section are applied.  Optionally, an alias may be provided if the persistence service requires special names (e.g. a table to be used in a database, a feed id for an IoT service, etc.)
+Note that * is NOT a wildcard match character in this context.
 
 The example `Items` section below takes advantage of a `default` entry in the  `Strategies` section.
 Assume the `Strategies` section contains the line:
@@ -135,11 +136,11 @@ Items {
 
 ## Restoring Item States on Restart
 
-When restarting your openHAB installation you may find there are times when your logs indicate some Items have the state, `UNDEF`.
+When restarting your openHAB installation you may find there are times when your logs indicate some Items have the state `NULL`.
 This is because, by default, Item states are not persisted when openHAB restarts - even if you have installed a persistence add-on.
-In order for items to be persisted across openHAB restarts, you must define a `restoreOnStartup` strategy for all your items.
-Then, whatever state they were in before the restart will be restored automatically.
-The following example persists all items on every change and restores them at startup:
+In order for items to be persisted across openHAB restarts, you must define a `restoreOnStartup` strategy for your items.
+Then whatever state they were in before the restart will be restored automatically.
+The following example persists two items on every change and restores them at startup:
 
 ```java
 Strategies {
@@ -147,9 +148,11 @@ Strategies {
 }
 
 Items {
-  * : strategy = everyChange, restoreOnStartup
+  item1, item2 : strategy = everyChange, restoreOnStartup
 }
 ```
+It is usually not necessary to restore all Items since there is a good chance that they are no longer accurate (switches may have been toggled, sensor values are likely to have changed), and the restoration may result in unwanted rule actions.
+
 
 ## Persistence Extensions in Scripts and Rules
 
@@ -172,7 +175,7 @@ Here is the full list of available persistence extensions:
 |-----------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `<item>.persist`                        | Persists the current State of the Item                                                                                                                                     |
 | `<item>.lastUpdate`                     | Queries for the last update timestamp of a given Item                                                                                                                      |
-| `<item>.historicState(AbstractInstant)` | Retrieves the State of an Item at a certain point in time                                                                                                                  |
+| `<item>.historicState(AbstractInstant)` | Retrieves the State of an Item at a certain point in time (returns HistoricItem)                                                                                            |
 | `<item>.changedSince(AbstractInstant)`  | Checks if the State of the Item has (ever) changed since a certain point in time                                                                                           |
 | `<item>.updatedSince(AbstractInstant)`  | Checks if the state of the Item has been updated since a certain point in time                                                                                             |
 | `<item>.maximumSince(AbstractInstant)`  | Gets the maximum value of the State of a persisted Item since a certain point in time                                                                                      |
@@ -190,6 +193,8 @@ You may specify a different persistence service by appending a String as an opti
 **Example**
 To persist an Item called `Lights` in an rrd4j database, you would enter the following:
 `Lights.persist("rrd4j")`
+
+The most useful methods of the HistoricItem object returned by some queries, are `.state` and `.getTimestamp`
 
 ### Date and Time Extensions
 

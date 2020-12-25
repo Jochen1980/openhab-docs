@@ -66,12 +66,11 @@ The file could look like this (depending on your choosen package and already ins
 
 ```text
 package = standard
-ui = basic,paper,habpanel
+ui = basic,paper,habpanel,restdocs
 action = pushover
 binding = astro,mqtt1
 transformation = jsonpath
 persistence = influxdb
-misc = restdocs
 ```
 
 To install the network Binding like we want in this example, we just need to add the id *network* to the Binding section.
@@ -85,11 +84,11 @@ After saving the file, the add-on will be installed.
 
 ## Through manually provided add-ons
 
-> Attention:
-> This option is adressed to advanced users.
-> Installing add-on's with a `.jar`file can lead to problems, because add-on dependencies may not be installed.
-> Please make sure to use this option only in special cases (like add-on testing for an upcoming version) or when you know what you are doing.
-
+::: warning Attention
+This option is adressed to advanced users.
+Installing add-on's with a `.jar`file can lead to problems, because add-on dependencies may not be installed.
+Please make sure to use this option only in special cases (like add-on testing for an upcoming version) or when you know what you are doing.
+:::
 For this installation option you need a bundles `.jar` file.
 One way of retrieving those files is mentioned above in the openHAB console part.
 

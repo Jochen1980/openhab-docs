@@ -29,30 +29,32 @@ Train your understanding of Linux permissions at [linuxjourney.com/lesson/file-p
 
 ## Meeting the Requirements: ##
 As a first step, please verify, that your system meets the [prerequisites](index.html#prerequisites).
-You may want to install Zulu, a fully certified Java build [as a package](http://zulu.org/zuludocs-folder/Content/ZuluUserGuide/PrepareZuluPlatform/AttachAzulPackageRepositories.htm) or [manually](http://zulu.org/zuludocs-folder/Content/ZuluUserGuide/InstallingZulu/InstallLinuxUsingZuluZIPFile.htm).
+You may want to install Zulu, a fully certified Java build [as a package](https://docs.azul.com/zulu/zuludocs/#ZuluUserGuide/InstallingZulu/InstallOnLinuxUsingAPTRepository.htm) or [manually](https://docs.azul.com/zulu/zuludocs/#ZuluUserGuide/InstallingZulu/InstallLinuxUsingZuluZIPFile.htm).
 
 Alternatively, Zulu Embedded can be installed for small systems either from the same package repository as above or [manually](http://www.azul.com/downloads/zulu-embedded/).
 If you're unsure which manual file you should download, using `dpkg --print-architecture` or `rpm -q --qf '%{ARCH}\n' rpm` in your Linux terminal should point you in the right direction (e.g. armhf means ARM Hard Float).
 
-When installing Zulu or Zulu Embedded from a .zip or .tar archive, make sure to [set Zulu as the main Java "alternative"](http://zulu.org/zuludocs-folder/Content/ZuluUserGuide/SwitchingBetweenJavaAlternatives/SwitchBetweenJavaAlts.htm).
+When installing Zulu or Zulu Embedded from a .zip or .tar archive, make sure to [set Zulu as the main Java "alternative"](https://docs.azul.com/zulu/zuludocs/#ZuluUserGuide/SwitchingBetweenJavaAlternatives/SwitchBetweenJavaAlts.htm).
 
-**Note:** Make sure to download Zulu or Java **8**, as openHAB is not yet compatible with Java 9. 
+::: tip Note
+Make sure to download Zulu or Java **8**, as openHAB is not yet compatible with Java 9.
+:::
 
 ## Installation
 
-openHAB 2 can be installed through 
+openHAB 2 can be installed through
  - the openHABian project **(easiest method, ships with the openHABian configuration tool)**
  - a package repository (apt, yum)
  - manually from file.
- 
-The installation through the **openHABian project** and the use of the provided openHABian configuration tool is recommended for end users. 
+
+The installation through the **openHABian project** and the use of the provided openHABian configuration tool is recommended for end users.
 
 Installing using the provided **package repository** (using `apt`, `apt-get`, `yum` or `dnf`) is easier, but requires more manualconfiguration later on due to the missing openHABian configuration tool.
 
 The manual installation through a platform independent archive file is suited for users who know what they are doing.
 
 ### openHABian project
-The easy step by step instruction can be found [here]: (openhabian.html).
+The easy step by step instruction can be found [here](openhabian.html).
 
 ### Package Repository Installation
 
@@ -62,7 +64,7 @@ Alternatively resort to the [manual installation approach](#manual-installation)
 {% include collapsible/start.html %}
 {% include collapsible/heading.html %}
 
-Apt Based Systems
+#### Apt Based Systems
 
 {% include collapsible/body.html %}
 
@@ -92,7 +94,7 @@ Then, you can choose between, *Official (Stable)*, *Beta* or *Snapshot* builds:
     Add the **openHAB 2 Beta Repository** to your systems apt sources list:
 
     ```shell
-    echo 'deb https://dl.bintray.com/openhab/apt-repo2 testing main' | sudo tee /etc/apt/sources.list.d/openhab2.list
+    echo 'deb https://openhab.jfrog.io/openhab/openhab-linuxpkg testing main' | sudo tee /etc/apt/sources.list.d/openhab2.list
     ```
 
 -   **Snapshot Release**
@@ -129,7 +131,7 @@ sudo apt-get install openhab2-addons
 {% include collapsible/item-end.html %}
 {% include collapsible/heading.html %}
 
-Yum or Dnf Based Systems
+#### Yum or Dnf Based Systems
 
 {% include collapsible/body.html %}
 
@@ -156,7 +158,7 @@ You may add all three to the same file, but make sure the desired repo is is set
     ```text
     [openHAB-Testing]
     name=openHAB 2.x.x Testing
-    baseurl=https://dl.bintray.com/openhab/rpm-repo2/testing
+    baseurl=https://openhab.jfrog.io/openhab/openhab-linuxpkg-rpm/testing
     gpgcheck=1
     gpgkey=https://bintray.com/user/downloadSubjectPublicKey?username=openhab
     enabled=1
@@ -279,7 +281,7 @@ Systems based on **systemd** (e.g. Debian 8, Ubuntu 15.x, Raspbian Jessie and ne
 
   # Stop the openHAB background service
   sudo systemctl stop openhab2.service
-  
+
   # Get the service log since the last boot
   sudo journalctl -u openhab2.service -b
 
@@ -474,24 +476,27 @@ The following instructions are intended for a Linux init system based on **syste
 This will allow you to register openHAB as a service, so that it runs at startup and automatically restarts if openHAB crashes.
 The service will be running with the privileges of the user "openhab" and expects the openHAB files under `/opt/openhab2`.
 
-Create the file `/lib/systemd/system/openhab2.service` with the following content:
+Create the file `/usr/lib/systemd/system/openhab2.service` with the following content:
 
 ```ini
 [Unit]
-Description=The openHAB 2 Home Automation Bus Solution
-Documentation=http://docs.openhab.org
+Description=openHAB 2 - empowering the smart home
+Documentation=https://www.openhab.org/docs/
+Documentation=https://community.openhab.org
 Wants=network-online.target
 After=network-online.target
 
 [Service]
-Type=simple
 User=openhab
 Group=openhab
+
 WorkingDirectory=/opt/openhab2
-#EnvironmentFile=/etc/default/openhab2
-ExecStart=/opt/openhab2/start.sh server
-ExecStop=/bin/kill -SIGINT $MAINPID
+#EnvironmentFile=-/etc/default/openhab2
+
+ExecStart=/opt/openhab2/runtime/bin/karaf daemon
+ExecStop=/opt/openhab2/runtime/bin/karaf stop
 Restart=on-failure
+SuccessExitStatus=0 143
 
 [Install]
 WantedBy=multi-user.target
@@ -512,10 +517,11 @@ sudo systemctl status openhab2.service
 The output of `status` after a successful execution should be similar to:
 
 ```text
- openhab2.service - The openHAB 2 Home Automation Bus Solution
-   Loaded: loaded (/lib/systemd/system/openhab2.service; enabled)
+ openhab2.service - openHAB 2 - empowering the smart home
+   Loaded: loaded (/usr/lib/systemd/system/openhab2.service; enabled)
    Active: active (running) since Thu 2016-08-14 01:16:00 GMT; 18h ago
-     Docs: http://docs.openhab.org
+     Docs: https://www.openhab.org/docs/
+           https://community.openhab.org
 ```
 
 #### Installing add-ons
@@ -573,7 +579,9 @@ To uninstall (or more precisely remove) openHAB 2 after being manually set up, t
 sudo systemctl stop openhab2.service
 sudo systemctl disable openhab2.service
 sudo rm -rf /opt/openhab2/
+sudo rm /usr/lib/systemd/system/openhab2.service
 sudo rm /lib/systemd/system/openhab2.service
+sudo systemctl daemon-reload
 ```
 
 ### File Locations
@@ -643,7 +651,7 @@ The need for these and the exact implementation on a specific system might diffe
 ### Privileges for Common Peripherals
 
 An openHAB setup will often rely on hardware like a modem, transceiver or adapter to interface with home automation hardware.
-Examples are a Bluetooth, Z-Wave, Enocean or RXFcom USB Stick or a Raspberry Pi add-on board connected to the serial port on its GPIOs.
+Examples are a Z-Wave, Enocean or RXFcom USB Stick or a Raspberry Pi add-on board connected to the serial port on its GPIOs.
 In order to allow openHAB to communicate with additional peripherals, it has to be added to corresponding Linux groups.
 The following example shows how to add Linux user `openhab` to the often needed groups `dialout` and `tty`.
 Additional groups may be needed, depending on your hardware and software setup.
@@ -651,7 +659,6 @@ Additional groups may be needed, depending on your hardware and software setup.
 ```shell
 sudo adduser openhab dialout
 sudo adduser openhab tty
-sudo adduser openhab bluetooth
 ```
 
 If you are looking to enable sound privileges for openHAB, it will also be necessary to add openHAB to the "audio" group.
@@ -725,6 +732,16 @@ Next, add the desired share configurations to the end of the file:
     [openHAB2-conf]
       comment=openHAB2 site configuration
       path=/etc/openhab2
+      browseable=Yes
+      writeable=Yes
+      only guest=no
+      public=no
+      create mask=0777
+      directory mask=0777
+
+    [openHAB2-logs]
+      comment=openHAB2 logs
+      path=/var/log/openhab2
       browseable=Yes
       writeable=Yes
       only guest=no
